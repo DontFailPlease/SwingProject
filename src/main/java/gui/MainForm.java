@@ -11,6 +11,7 @@ import java.util.LinkedList;
 
 /**
  * Created by di on 23.11.16.
+ * Class generates and provides user interface for application.
  */
 public class MainForm extends JFrame implements GuiCallBack{
     private JButton dataGeneratorButton;
@@ -28,7 +29,7 @@ public class MainForm extends JFrame implements GuiCallBack{
     private JProgressBar progressBar;
 
     @Override
-    public void setSummaryLabelText(final String textValue) {
+    synchronized public void setSummaryLabelText(final String textValue) {
         if(SwingUtilities.isEventDispatchThread())
         {
             dataSummaryRows.setText(textValue);
@@ -45,7 +46,7 @@ public class MainForm extends JFrame implements GuiCallBack{
     }
 
     @Override
-    public void updateTable(LinkedList<Double> newData)
+    synchronized public void updateTable(LinkedList<Double> newData)
     {
         if(SwingUtilities.isEventDispatchThread())
         {
@@ -62,7 +63,7 @@ public class MainForm extends JFrame implements GuiCallBack{
     }
 
     @Override
-    public void updateProgressBar(final int percentage) {
+    synchronized public void updateProgressBar(final int percentage) {
         if(SwingUtilities.isEventDispatchThread())
         {
             progressBar.setValue(percentage);
@@ -97,7 +98,7 @@ public class MainForm extends JFrame implements GuiCallBack{
         createDataSplitPane();
 
         this.setSize(width, height);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     }
 

@@ -7,17 +7,18 @@ import java.util.*;
 
 /**
  * Created by di on 23.11.16.
+ * Class for data generation in one or more threads.
+ * Generating data produces in other threads, but data sorting works in main thread.
  */
 
-public class DataGenerator implements DataGeneratorInterface {
+class DataGenerator implements DataGeneratorInterface {
 
     private static Random randomvalues = new Random();
-    private final double LIST_SIZE_BORDER = Math.pow(10.0, 7.0);
-    private final int PORTION_SIZE_FOR_PUBLISHING = 1000000;
-    private final int DELAY_BETWEEN_PORTIONS = 100; // milliseconds
+    private final double LIST_SIZE_BORDER = Math.pow(10.0, 6.0);
+    private final int PORTION_SIZE_FOR_PUBLISHING = 1000;
     private LinkedList<Double> data;
 
-    public DataGenerator() {
+    DataGenerator() {
         data = new LinkedList<>();
     }
 
@@ -27,23 +28,25 @@ public class DataGenerator implements DataGeneratorInterface {
         backGroundOperationWorker.execute();
     }
 
+    synchronized  private void addDataPortion(LinkedList<Double> dataPortion)
+    {
+        data.addAll(dataPortion);
+    }
+
     public LinkedList<Double> getData() {
         return data;
     }
 
     synchronized public void sortData() {
         Collections.sort(data);
-        //MainForm.updateTable();        //MainForm.updateTable();
     }
 
     public Integer getDataRowsCount() {
-        Integer rowsCount = data == null ? null : data.size();
-        return rowsCount;
+        return data == null ? null : data.size();
     }
 
     public Double getValueByRowNumber(int row) {
-        Double resultValue = data == null ? null : row >= 0 ? data.get(row) : null;
-        return resultValue;
+        return  data == null ? null : row >= 0 ? data.get(row) : null;
     }
 
     public void setValueByRowNumber(Double insertedValue, int row) {
@@ -86,26 +89,20 @@ public class DataGenerator implements DataGeneratorInterface {
 
         @Override
         protected void process(List<LinkedList<Double>> generatedData) {
-
-            data.addAll(generatedData.get(0));
-            gui.updateTable(data);
-            gui.setSummaryLabelText(Integer.toString(data.size()));
-            gui.updateProgressBar(getProgress());
+            for (LinkedList dataForAddition : generatedData) {
+                addDataPortion(dataForAddition);
+                gui.updateTable(data);
+                gui.setSummaryLabelText(Integer.toString(data.size()));
+                gui.updateProgressBar(getProgress());
+            }
         }
 
         synchronized private LinkedList<Double> generateDataActions() {
             for (int numRowsAlreadyGenerate = PORTION_SIZE_FOR_PUBLISHING; numRowsAlreadyGenerate <= LIST_SIZE_BORDER;)
             {
-                try {
-                    LinkedList<Double> portion = getPortionOfData(PORTION_SIZE_FOR_PUBLISHING);
-                    publish(portion);
-                    setProgress((int)(numRowsAlreadyGenerate / LIST_SIZE_BORDER * 100));
-                    numRowsAlreadyGenerate += PORTION_SIZE_FOR_PUBLISHING;
-                    Thread.currentThread().sleep(DELAY_BETWEEN_PORTIONS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                publish(getPortionOfData(PORTION_SIZE_FOR_PUBLISHING));
+                setProgress((int)(numRowsAlreadyGenerate / LIST_SIZE_BORDER * 100));
+                numRowsAlreadyGenerate += PORTION_SIZE_FOR_PUBLISHING;
             }
             return data;
         }
