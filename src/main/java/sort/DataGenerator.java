@@ -11,7 +11,7 @@ import java.util.*;
  * Generating data produces in other threads, but data sorting works in main thread.
  */
 
-class DataGenerator implements DataGeneratorInterface {
+public class DataGenerator implements DataGeneratorInterface {
 
     private static Random randomvalues = new Random();
     private final double LIST_SIZE_BORDER = Math.pow(10.0, 6.0);
