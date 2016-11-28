@@ -1,10 +1,9 @@
 package components.models;
 
-import sort.DataGeneratorFactory;
+import data.DataGeneratorFactory;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by di on 23.11.16.

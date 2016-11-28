@@ -1,4 +1,6 @@
-package sort
+package data
+
+import org.junit.Test
 
 /**
  * Created by di on 27.11.16.
@@ -13,12 +15,14 @@ class DataGeneratorTest extends groovy.util.GroovyTestCase {
 
     }
 
-    void testGenerateData() {
-
+    @Test
+    void testGenerateData(Object gui) {
+        assertNull("Gui object is NULL.", gui);
+        assertNotNull("Gui object is NULL.", gui);
     }
 
     void testGetData() {
-
+        System.out.println("b");
     }
 
     void testSortData() {

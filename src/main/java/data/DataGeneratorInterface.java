@@ -1,4 +1,4 @@
-package sort;
+package data;
 
 import java.util.List;
 import gui.*;

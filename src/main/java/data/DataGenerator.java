@@ -1,4 +1,4 @@
-package sort;
+package data;
 
 import gui.MainForm;
 

@@ -1,4 +1,4 @@
-package sort;
+package data;
 
 /**
  * Created by di on 23.11.16.
